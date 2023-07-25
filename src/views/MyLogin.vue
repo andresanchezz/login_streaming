@@ -4,7 +4,7 @@
 
       <img src="" alt="">
 
-      <form @submit="onSubmit">
+      <form @submit.prevent="onSubmit" >
         <h2>Registro</h2>
         <input v-model="username.value" :ref="username.ref" placeholder="Usuario" />
         <p v-if="username.error">{{ username.error.message }}</p>
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { useForm } from 'vue-hooks-form'
 
 export default {
@@ -68,7 +69,23 @@ export default {
       },
     })
 
-    const onSubmit = (data) => console.log(data)
+    const onSubmit = (data) =>{
+
+      axios.post('http://localhost:3000/users', data)
+      .then(
+        resp =>{
+          console.log(resp);
+        } 
+      ).catch(
+        error =>{
+          console.log(error);
+        }
+      )
+      
+      const formElement = document.querySelector('form');
+      formElement.reset();
+    }
+
     return {
       username,
       email,
@@ -112,7 +129,6 @@ main {
       flex-direction: column;
       input{
         font-size: 0.9rem;
-        text-transform: uppercase;
         background: none;
         padding: 10px 0;
         margin: 8px 0;
